@@ -28,6 +28,11 @@ $categories = [
 
 
 
+  foreach ($categories as  $categorie ) {
+    if (empty($categorie["produits"])) {
+         echo $categorie["nom"]."\n";
+    }
+ }
 
 
 
