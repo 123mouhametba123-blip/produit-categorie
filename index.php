@@ -1,4 +1,5 @@
 <?php
+//1
 $categories = [
 
    0 =>      [
@@ -26,7 +27,7 @@ $categories = [
          ]
 ];
 
-
+//2
 
   foreach ($categories as  $categorie ) {
     if (empty($categorie["produits"])) {
