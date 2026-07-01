@@ -93,3 +93,73 @@ $categories = [
 
 
 
+// 4: ajouter un produit à une catégorie
+
+function saisieChampObligatoire(string $smsSaisie, string $smsError): string {
+    do {
+        $value = saisieChaine($smsSaisie);
+        $valueIsValid = champObligatoire($value, $smsError);
+    } while (!$valueIsValid);
+    return $value;
+}
+
+function saisieEntierPositif(string $smsSaisie): int {
+    do {
+        $value = (int) saisieChaine($smsSaisie);
+    } while ($value <= 0);
+    return $value;
+}
+
+function saisirProduit(): array {
+    $nom = saisieChampObligatoire("Entrez le nom du produit : ", "le nom est obligatoire");
+    $reference = saisieChampObligatoire("Entrez la reference : ", "la reference est obligatoire");
+    $prix = saisieEntierPositif("Entrez le prix : ");
+    $quantite = saisieEntierPositif("Entrez la quantite : ");
+    return [
+        "nom" => $nom,
+        "reference" => $reference,
+        "prix" => $prix,
+        "quantite" => $quantite
+    ];
+}
+
+function ajouterProduit(): void {
+    global $categories;
+    $code = saisieChaine("Entrez le code de la categorie : ");
+    $index = rechercheCategorieParCle($categories, "code", $code);
+    if ($index !== false) {
+        $produit = saisirProduit();
+        $categories[$index]["produits"][] = $produit;
+    } else {
+        echo "désolé, la categorie n'existe pas...\n";
+    }
+}
+
+ajouterProduit();
+
+
+
+
+
+// 5: ajouter une catégorie en lui affectant des produits
+
+function enregistrerCategorieAvecProduits(): void {
+    global $categories;
+    $code = saisieChampObligatoireEtUnique($categories, "Entrez le code :", "champs obligatoire : ", "code");
+    $nom = saisieChampObligatoireEtUnique($categories, "Entrez le nom :", "champs obligatoire : ", "nom");
+
+    $produits = [];
+    do {
+        $produits[] = saisirProduit();
+        $choix = strtolower(saisieChaine("voulez vous continuer oui|non : "));
+    } while ($choix === "oui");
+
+    $categorie = [
+        "code" => $code,
+        "nom" => $nom,
+        "produits" => $produits
+    ];
+    $categories[] = $categorie;
+}
+
+enregistrerCategorieAvecProduits();
